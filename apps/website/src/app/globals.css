@@ -48,9 +48,11 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
+  overflow-x: hidden;
   background-color: var(--color-navy-950);
   color: var(--color-text-primary);
   font-feature-settings: "ss01", "ss02", "cv01";

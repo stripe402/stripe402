@@ -1,6 +1,8 @@
 {
-  "name": "stripe402",
+  "name": "stripe402 — HTTP 402 Payments with Stripe",
   "short_name": "stripe402",
+  "description": "An open standard for internet-native API and agentic payments using HTTP 402 and Stripe.",
+  "start_url": "/",
   "icons": [
     { "src": "/favicon-192x192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/favicon-512x512.png", "sizes": "512x512", "type": "image/png" }

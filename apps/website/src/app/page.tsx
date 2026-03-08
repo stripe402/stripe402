@@ -147,9 +147,9 @@ function ComparisonRow({ label, trad, x402, s402 }: {
       <div className="bg-surface-raised px-5 py-4 flex items-center">
         <span className="text-[13px] font-medium text-text-tertiary">{label}</span>
       </div>
+      <ComparisonCell {...s402} highlighted />
       <ComparisonCell {...trad} />
       <ComparisonCell {...x402} />
-      <ComparisonCell {...s402} highlighted />
     </>
   )
 }
@@ -171,7 +171,7 @@ function SectionHeader({
         {label}
       </p>
       <h2
-        className="text-[36px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.1] text-text-primary"
+        className="text-[28px] sm:text-[36px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.1] text-text-primary"
         dangerouslySetInnerHTML={{ __html: title }}
       />
       {description && (
@@ -188,16 +188,20 @@ function SectionHeader({
 export default function Home() {
   return (
     <div className="min-h-screen bg-navy-950">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-stripe-purple focus:text-white focus:rounded-lg">
+        Skip to content
+      </a>
+
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-navy-950/90 backdrop-blur-md border-b border-border-subtle">
+      <header className="fixed top-0 w-full z-50 bg-navy-950/90 backdrop-blur-md border-b border-border-subtle" role="banner">
         <div className="max-w-[1080px] mx-auto px-6 h-[60px] flex items-center justify-between">
-          <a href="#" className="flex items-center gap-0.5">
+          <a href="#" className="flex items-center gap-0.5" aria-label="stripe402 home">
             <span className="text-[17px] font-semibold tracking-[-0.01em] text-text-primary">
               stripe<span className="text-stripe-purple">402</span>
             </span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-7">
+          <nav className="hidden md:flex items-center gap-7" aria-label="Main navigation">
             {['How It Works', 'Comparison', 'Packages', 'FAQ'].map((label) => (
               <a
                 key={label}
@@ -213,7 +217,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main>
+      <main id="main-content">
         {/* ── Hero ── */}
         <section className="relative pt-[140px] pb-[100px]">
           <div className="hero-gradient" />
@@ -222,7 +226,7 @@ export default function Home() {
               <p className="text-[13px] font-mono font-medium text-stripe-purple tracking-[0.08em] uppercase mb-5">
                 Agentic Payments Made Easy
               </p>
-              <h1 className="text-[52px] md:text-[64px] font-bold tracking-[-0.035em] leading-[1.05] text-text-primary mb-6">
+              <h1 className="text-[36px] sm:text-[52px] md:text-[64px] font-bold tracking-[-0.035em] leading-[1.05] text-text-primary mb-6">
                 Payment is the
                 <br />
                 authentication.
@@ -342,7 +346,7 @@ export default function Home() {
               description="After the first payment, subsequent requests re-use the client ID until the balance runs out."
             />
 
-            <div className="mt-14 grid gap-0">
+            <div className="mt-14 grid gap-0 min-w-0">
               {[
                 {
                   step: '1',
@@ -382,7 +386,7 @@ export default function Home() {
                   </div>
 
                   {/* Content */}
-                  <div className="pb-10 flex-1 min-w-0">
+                  <div className="pb-10 flex-1 min-w-0 overflow-hidden">
                     <h3 className="text-[16px] font-semibold text-text-primary mb-3 tracking-[-0.01em]">
                       {item.title}
                     </h3>
@@ -435,8 +439,8 @@ export default function Home() {
                 <h3 className="text-[15px] font-semibold text-text-primary mb-5 tracking-[-0.01em]">
                   Client identity
                 </h3>
-                <div className="rounded-lg bg-navy-950 border border-border-default px-4 py-3 mb-5">
-                  <code className="text-[12px] font-mono text-stripe-teal">
+                <div className="rounded-lg bg-navy-950 border border-border-default px-4 py-3 mb-5 overflow-x-auto">
+                  <code className="text-[12px] font-mono text-stripe-teal whitespace-nowrap">
                     HMAC-SHA256(card_fingerprint, server_secret)
                   </code>
                 </div>
@@ -468,24 +472,26 @@ export default function Home() {
             />
 
             {/* Column headers */}
-            <div className="mt-14 grid grid-cols-[180px_1fr_1fr_1fr] gap-px rounded-t-xl overflow-hidden">
-              <div className="bg-navy-950" />
-              <div className="bg-surface-overlay px-5 py-4">
-                <p className="text-[11px] font-mono text-text-quaternary uppercase tracking-[0.08em] mb-1">Traditional</p>
-                <p className="text-[15px] font-semibold text-text-secondary">API Keys + Billing</p>
-              </div>
-              <div className="bg-surface-overlay px-5 py-4">
-                <p className="text-[11px] font-mono text-text-quaternary uppercase tracking-[0.08em] mb-1">Crypto-native</p>
-                <p className="text-[15px] font-semibold text-text-secondary">x402 (USDC)</p>
-              </div>
-              <div className="bg-stripe-purple/[0.08] border border-stripe-purple/20 px-5 py-4 -ml-px -mt-px rounded-tr-xl">
-                <p className="text-[11px] font-mono text-stripe-purple uppercase tracking-[0.08em] mb-1">This project</p>
-                <p className="text-[15px] font-semibold text-text-primary">stripe402</p>
-              </div>
-            </div>
+            <div className="mt-14 overflow-x-auto -mx-6 px-6">
+              <div className="min-w-[700px]">
+                <div className="grid grid-cols-[160px_1fr_1fr_1fr] gap-px rounded-t-xl overflow-hidden">
+                  <div className="bg-navy-950" />
+                  <div className="bg-stripe-purple/[0.08] border border-stripe-purple/20 px-5 py-4 -ml-px -mt-px">
+                    <p className="text-[11px] font-mono text-stripe-purple uppercase tracking-[0.08em] mb-1">This project</p>
+                    <p className="text-[15px] font-semibold text-text-primary">stripe402</p>
+                  </div>
+                  <div className="bg-surface-overlay px-5 py-4">
+                    <p className="text-[11px] font-mono text-text-quaternary uppercase tracking-[0.08em] mb-1">Traditional</p>
+                    <p className="text-[15px] font-semibold text-text-secondary">API Keys + Billing</p>
+                  </div>
+                  <div className="bg-surface-overlay px-5 py-4 rounded-tr-xl">
+                    <p className="text-[11px] font-mono text-text-quaternary uppercase tracking-[0.08em] mb-1">Crypto-native</p>
+                    <p className="text-[15px] font-semibold text-text-secondary">x402 (USDC)</p>
+                  </div>
+                </div>
 
-            {/* Rows */}
-            <div className="grid grid-cols-[180px_1fr_1fr_1fr] gap-px bg-border-subtle rounded-b-xl overflow-hidden">
+                {/* Rows */}
+                <div className="grid grid-cols-[160px_1fr_1fr_1fr] gap-px bg-border-subtle rounded-b-xl overflow-hidden">
               {[
                 {
                   label: 'User onboarding',
@@ -532,6 +538,8 @@ export default function Home() {
               ].map((row) => (
                 <ComparisonRow key={row.label} {...row} />
               ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -629,7 +637,7 @@ export default function Home() {
                   key={pkg.name}
                   className="bg-surface-raised px-7 py-5 flex flex-col md:flex-row md:items-center gap-2 md:gap-6"
                 >
-                  <code className="text-[14px] font-mono text-stripe-purple-light w-[240px] flex-shrink-0">
+                  <code className="text-[14px] font-mono text-stripe-purple-light md:w-[240px] md:flex-shrink-0">
                     {pkg.name}
                   </code>
                   <span className="text-[11px] font-mono text-text-quaternary uppercase tracking-[0.08em] w-[56px] flex-shrink-0">
@@ -645,7 +653,7 @@ export default function Home() {
             {/* Install */}
             <div className="mt-10 max-w-[480px]">
               <div className="rounded-lg bg-surface-raised border border-border-default overflow-hidden">
-                <pre className="px-5 py-4 text-[13px] font-mono leading-[2]">
+                <pre className="px-5 py-4 text-[13px] font-mono leading-[2] overflow-x-auto">
                   <Line cmt># server</Line>{'\n'}
                   <Line txt>npm install </Line><Line str>@stripe402/express</Line>{'\n'}
                   {'\n'}
@@ -766,11 +774,11 @@ export default function Home() {
       <footer className="border-t border-border-subtle">
         <div className="max-w-[1080px] mx-auto px-6 py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-8">
+            <div className="flex flex-wrap items-center gap-4 md:gap-8">
               <span className="text-[15px] font-semibold tracking-[-0.01em] text-text-tertiary">
                 stripe<span className="text-stripe-purple">402</span>
               </span>
-              <nav className="flex items-center gap-6 text-[13px] text-text-quaternary">
+              <nav className="flex flex-wrap items-center gap-4 md:gap-6 text-[13px] text-text-quaternary" aria-label="Footer navigation">
                 <a href="#how-it-works" className="hover:text-text-secondary transition-colors duration-200">
                   How It Works
                 </a>

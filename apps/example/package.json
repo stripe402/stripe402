@@ -11,7 +11,8 @@
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
     "demo:axios": "ts-node src/client-axios-demo.ts",
-    "demo:fetch": "ts-node src/client-fetch-demo.ts"
+    "demo:fetch": "ts-node src/client-fetch-demo.ts",
+    "create-pm": "ts-node src/create-payment-method.ts"
   },
   "dependencies": {
     "@stripe402/core": "workspace:*",
