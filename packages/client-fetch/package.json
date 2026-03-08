@@ -1,6 +1,6 @@
 {
   "name": "@stripe402/client-fetch",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "license": "Apache-2.0",
   "author": "Lance Whatley",
   "main": "dist/index.js",

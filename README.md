@@ -136,13 +136,15 @@ Core server-side logic: Stripe PaymentIntent integration, and persistence stores
 import { StripeService, RedisStore, PostgresStore } from '@stripe402/server'
 ```
 
-**Redis store:**
+**Redis store** (default):
 
 ```ts
 import Redis from 'ioredis'
 import { RedisStore } from '@stripe402/server'
 
-const store = new RedisStore(new Redis())
+// Defaults to redis://localhost:6379 when REDIS_URL is not set
+const redis = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379')
+const store = new RedisStore(redis)
 ```
 
 **PostgreSQL store:**
@@ -151,7 +153,8 @@ const store = new RedisStore(new Redis())
 import { PostgresStore } from '@stripe402/server'
 import { Pool } from 'pg'
 
-const store = new PostgresStore(new Pool({ connectionString: DATABASE_URL }))
+// Requires DATABASE_URL (e.g. postgresql://user:pass@localhost:5432/stripe402)
+const store = new PostgresStore(new Pool({ connectionString: process.env.DATABASE_URL }))
 await store.createTables() // Run once on startup
 ```
 
@@ -161,16 +164,21 @@ Express middleware that protects routes with 402 payment gates. Handles the full
 
 ```ts
 import express from 'express'
+import Redis from 'ioredis'
 import { stripe402Middleware } from '@stripe402/express'
 import { RedisStore } from '@stripe402/server'
 
 const app = express()
 
+// Configure persistence — defaults to local Redis on port 6379
+const redis = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379')
+const store = new RedisStore(redis)
+
 app.use(stripe402Middleware({
   stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
   stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY!,
-  serverSecret: process.env.SERVER_SECRET!,
-  store: new RedisStore(redis),
+  serverSecret: process.env.SERVER_SECRET ?? 'change-me-in-production',
+  store,
   routes: {
     'GET /api/weather': {
       amount: 500,       // 5 cents per request (500 units)
