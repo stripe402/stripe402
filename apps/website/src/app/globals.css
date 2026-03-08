@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap");
+}
+
+@theme {
+  /* Stripe navy-dark palette */
+  --color-navy-950: #0A2540;
+  --color-navy-900: #0D2E4D;
+  --color-navy-850: #0F3557;
+  --color-navy-800: #113B61;
+  --color-navy-700: #1D4D74;
+  --color-navy-600: #2A5F87;
+  --color-navy-500: #3D7099;
+  --color-navy-400: #5A8DB5;
+
+  /* Text */
+  --color-text-primary: #F6F9FC;
+  --color-text-secondary: #ADBDCC;
+  --color-text-tertiary: #7B8FA0;
+  --color-text-quaternary: #536978;
+
+  /* Stripe accent */
+  --color-stripe-purple: #635BFF;
+  --color-stripe-purple-light: #7A73FF;
+  --color-stripe-teal: #00D4AA;
+  --color-stripe-cyan: #80E9FF;
+  --color-stripe-orange: #FF7A00;
+
+  /* Surfaces */
+  --color-surface-primary: #0A2540;
+  --color-surface-raised: #0E2F4F;
+  --color-surface-overlay: #112D49;
+
+  /* Borders */
+  --color-border-default: #1D3A56;
+  --color-border-subtle: #152E47;
+
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-navy-950);
+  color: var(--color-text-primary);
+  font-feature-settings: "ss01", "ss02", "cv01";
+}
+
+::selection {
+  background-color: var(--color-stripe-purple);
+  color: white;
+}
+
+/* Stripe-style mesh gradient */
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-gradient::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 80%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(99, 91, 255, 0.12) 0%,
+    rgba(0, 212, 170, 0.06) 40%,
+    transparent 70%
+  );
+  filter: blur(80px);
+}
+
+.hero-gradient::after {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 60%;
+  height: 80%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(128, 233, 255, 0.06) 0%,
+    transparent 60%
+  );
+  filter: blur(100px);
+}
+
+/* Section divider — fine horizontal rule */
+.section-rule {
+  border: none;
+  height: 1px;
+  background: var(--color-border-subtle);
+}

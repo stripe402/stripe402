@@ -1,0 +1,26 @@
+{
+  "name": "@stripe402/express",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "author": "Lance Whatley",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@stripe402/core": "workspace:*",
+    "@stripe402/server": "workspace:*"
+  },
+  "peerDependencies": {
+    "express": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
+    "express": "^5.1.0",
+    "typescript": "^5.9.3"
+  }
+}

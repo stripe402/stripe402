@@ -1,0 +1,32 @@
+{
+  "name": "@stripe402/server",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "author": "Lance Whatley",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@stripe402/core": "workspace:*",
+    "stripe": "^17.7.0"
+  },
+  "peerDependencies": {
+    "ioredis": ">=5.0.0",
+    "pg": ">=8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "ioredis": { "optional": true },
+    "pg": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "@types/pg": "^8.15.4",
+    "ioredis": "^5.8.2",
+    "pg": "^8.16.3",
+    "typescript": "^5.9.3"
+  }
+}

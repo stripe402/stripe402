@@ -1,0 +1,19 @@
+{
+  "name": "stripe402",
+  "private": true,
+  "license": "Apache-2.0",
+  "author": "Lance Whatley",
+  "packageManager": "pnpm@10.28.1",
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "clean": "pnpm -r clean",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
+    "vitest": "^4.0.18"
+  }
+}
