@@ -211,6 +211,14 @@ export default function Home() {
                 {label}
               </a>
             ))}
+            <a
+              href="https://docs.stripe402.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-200"
+            >
+              Docs
+            </a>
           </nav>
 
           <SocialLinks />
@@ -790,6 +798,9 @@ export default function Home() {
                 </a>
                 <a href="#faq" className="hover:text-text-secondary transition-colors duration-200">
                   FAQ
+                </a>
+                <a href="https://docs.stripe402.com" target="_blank" rel="noopener noreferrer" className="hover:text-text-secondary transition-colors duration-200">
+                  Docs
                 </a>
               </nav>
             </div>
