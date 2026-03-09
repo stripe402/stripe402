@@ -1,37 +1,30 @@
 # Agentic Payments
 
-stripe402 is designed for AI agents to autonomously discover and pay for APIs without human intervention.
+AI agents can discover and pay for stripe402 APIs without human intervention.
 
-## The Problem
+## The problem
 
-Today, when an AI agent discovers a useful API, it typically can't use it without:
+Today, when an AI agent discovers a useful API, it can't use it without a human creating an account, generating API keys, configuring billing, and providing the keys to the agent. That breaks autonomous workflows.
 
-1. A human creating an account
-2. Generating API keys
-3. Configuring billing
-4. Providing the keys to the agent
-
-This breaks autonomous workflows and requires human-in-the-loop for every new API.
-
-## How stripe402 Solves This
+## How stripe402 works for agents
 
 With stripe402, an agent can:
 
-1. **Discover** an API endpoint
-2. **Receive** pricing information in a machine-readable 402 response
-3. **Pay** with a pre-authorized card (via a stored PaymentMethod ID)
-4. **Use** the resource immediately
-5. **Continue** making requests against its credit balance
+1. Discover an API endpoint
+2. Read pricing from the machine-readable 402 response
+3. Pay with a pre-authorized card (via a stored PaymentMethod ID)
+4. Use the resource immediately
+5. Keep making requests against its credit balance
 
-No human in the loop. No account provisioning. The agent treats payment as just another HTTP header.
+No human in the loop. The agent treats payment as just another HTTP header.
 
 ## Implementation
 
-### All You Need: Card Details
+### All you need: card details
 
 An agent **does not need a Stripe account**. The only prerequisite is a credit card (number, expiration, CVC). When a stripe402 API responds with 402, the response includes the server's **publishable key** — the agent uses that key to tokenize its card on the fly.
 
-### Complete Agent Setup
+### Complete agent setup
 
 ```ts
 import Stripe from 'stripe'
@@ -76,7 +69,7 @@ const translation = await agentFetch('https://translate-api.example.com/en-to-fr
 })
 ```
 
-### Budget Controls
+### Budget controls
 
 Agents should have spending policies:
 
@@ -118,11 +111,9 @@ const onPaymentRequired = async (requirements) => {
 }
 ```
 
-## Why This Works
+## How the protocol helps agents
 
-### Self-Describing Protocol
-
-The 402 response is fully machine-readable:
+The 402 response is machine-readable, so agents can parse it without any prior knowledge of the API:
 
 ```json
 {
@@ -139,23 +130,17 @@ The 402 response is fully machine-readable:
 }
 ```
 
-An agent can parse this to understand: what the API does, how much it costs, what the minimum payment is, and how to pay.
+After the first payment, the agent receives a `clientId` and uses credits for subsequent requests. No repeated charges, just a lightweight header on each request.
 
-### Credit Persistence
+The same credit card works with any stripe402-enabled API. Each provider's publishable key creates a separate PaymentMethod, but the agent only ever needs its card details.
 
-After the first payment, the agent receives a `clientId` and uses credits for subsequent requests — no repeated payments, just a lightweight header on each request.
+## Security considerations
 
-### Cross-API Portability
-
-The same credit card works with any stripe402-enabled API. An agent with one card can pay for APIs across different providers, each with their own pricing. Each provider's publishable key creates a separate PaymentMethod, but the agent only ever needs its card details.
-
-## Security Considerations
-
-- **Store card details securely** — treat them like secrets (environment variables, encrypted config)
-- **Implement spending limits** — agents should have daily/monthly budgets
-- **Monitor usage** — track which APIs the agent is paying for and how much
-- **Use Stripe test mode** during development — test keys don't charge real cards
-- **PCI scope** — agents handling raw card numbers are in SAQ-D scope; card details go directly to Stripe, never to the API server
-- **Cache PaymentMethod IDs** — once created, the `pm_...` ID can be reused for subsequent top-ups on the same server, avoiding repeated card tokenization
+- Store card details securely (environment variables, encrypted config)
+- Set spending limits — agents should have daily/monthly budgets
+- Monitor usage: which APIs the agent is paying for and how much
+- Use Stripe test mode during development
+- PCI scope: agents handling raw card numbers are in SAQ-D scope; card details go directly to Stripe, never to the API server
+- Cache PaymentMethod IDs — the `pm_...` ID can be reused for subsequent top-ups on the same server
 
 See [Creating Payment Methods](creating-payment-methods.md) for all options including caching strategies.

@@ -1,6 +1,6 @@
 # Design Decisions
 
-Key architectural and design choices in stripe402, with rationale.
+Why things are built the way they are.
 
 ## Why Not Raw Card Numbers?
 

@@ -1,6 +1,6 @@
 # @stripe402/express
 
-Express middleware that protects routes with HTTP 402 payment gates. Handles the full lifecycle: 402 challenge, payment processing, credit management, and resource delivery.
+Express middleware that gates routes behind HTTP 402 payment requirements. Handles the 402 challenge, payment processing, credit management, and serving the resource.
 
 ## Installation
 

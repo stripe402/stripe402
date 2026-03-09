@@ -1,6 +1,6 @@
 # @stripe402/server
 
-Core server-side logic for stripe402: Stripe API integration and persistence stores. This package is **framework-agnostic** — it provides the building blocks that framework-specific middleware packages (like `@stripe402/express`) use.
+Stripe API integration and persistence stores (Redis, PostgreSQL). Framework-agnostic — it provides the building blocks that framework-specific middleware packages like `@stripe402/express` use.
 
 ## Installation
 

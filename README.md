@@ -53,15 +53,15 @@ stripe402 brings the same protocol pattern to credit cards, the payment rail use
 
 **The trade-off is statefulness.** x402 is stateless — each payment is settled on-chain in the request. stripe402 requires the server to maintain credit balances. This is the cost of using traditional payment rails, but it's a familiar problem with well-understood solutions (Redis, PostgreSQL, atomic operations).
 
-### What Gap Does This Fill?
+### What problem does this solve?
 
 Today, API monetization requires one of: API key provisioning with billing dashboards (Stripe Billing, AWS Marketplace), OAuth + subscription tiers, or crypto wallets (x402). All require signup, account creation, or specialized infrastructure.
 
-stripe402 removes all of that. A client with a credit card can pay for any stripe402-enabled API on the first request. No dashboard, no registration, no approval process. The protocol is self-describing — the 402 response tells the client exactly what it costs and how to pay.
+stripe402 skips all of that. A client with a credit card can pay for any stripe402-enabled API on the first request. No dashboard, no registration, no approval process. The 402 response tells the client what it costs and how to pay.
 
 ### Agentic Payments
 
-This protocol is particularly valuable for AI agents. Today, when an agent discovers a useful API, it typically can't use it without a human creating an account, generating API keys, and configuring billing. This breaks autonomous workflows.
+Today, when an agent discovers a useful API, it can't use it without a human creating an account, generating API keys, and configuring billing.
 
 With stripe402, an agent can:
 1. Discover an API endpoint
@@ -70,7 +70,7 @@ With stripe402, an agent can:
 4. Use the resource immediately
 5. Continue making requests against its credit balance
 
-No human in the loop. No account provisioning. The agent treats payment as just another HTTP header — the same way it handles authentication today, but with zero setup. This turns every stripe402-enabled API into an instantly accessible tool for any agent with a payment method.
+No human in the loop. The agent treats payment as just another HTTP header.
 
 ## Pricing Units
 

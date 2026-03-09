@@ -1,8 +1,8 @@
 # Comparison: stripe402 vs x402
 
-Coinbase's [x402](https://x402.org) protocol proved the concept — HTTP-native, machine-readable payment negotiation is powerful. stripe402 brings the same pattern to credit cards.
+Coinbase's [x402](https://x402.org) protocol showed that HTTP-native, machine-readable payment negotiation works. stripe402 brings the same pattern to credit cards.
 
-## Feature Comparison
+## Feature comparison
 
 | Feature | x402 (crypto) | stripe402 |
 |---------|---------------|-----------|
@@ -18,7 +18,7 @@ Coinbase's [x402](https://x402.org) protocol proved the concept — HTTP-native,
 | **Chargeback risk** | None (crypto is irreversible) | Yes (credit card chargebacks apply) |
 | **Protocol header** | `X-PAYMENT` | `payment` / `payment-required` / `payment-response` |
 
-## The Statefulness Trade-Off
+## The statefulness trade-off
 
 The fundamental difference is **statefulness**:
 
@@ -28,19 +28,19 @@ The fundamental difference is **statefulness**:
 
 This is a deliberate trade-off. Maintaining a balance ledger is a well-understood problem with well-understood solutions (Redis with Lua for atomicity, PostgreSQL with WHERE clauses). The operational cost of managing state is low compared to the adoption benefit of accepting credit cards.
 
-## What Gap Does stripe402 Fill?
+## What problem does stripe402 solve?
 
 Today, API monetization requires one of:
 
-- **API key provisioning** with billing dashboards (Stripe Billing, AWS Marketplace)
-- **OAuth + subscription tiers** with account management
-- **Crypto wallets** (x402)
+- API key provisioning with billing dashboards (Stripe Billing, AWS Marketplace)
+- OAuth + subscription tiers with account management
+- Crypto wallets (x402)
 
 All require signup, account creation, or specialized infrastructure.
 
-stripe402 removes all of that. A client with a credit card can pay for any stripe402-enabled API on the first request. The 402 response is self-describing — it tells the client exactly what the resource costs and how to pay for it. No dashboard, no registration, no approval process.
+stripe402 skips all of that. A client with a credit card can pay for any stripe402-enabled API on the first request. The 402 response tells the client what the resource costs and how to pay.
 
-## When to Use Which
+## When to use which
 
 **Use x402 when**:
 - Your clients already have crypto wallets

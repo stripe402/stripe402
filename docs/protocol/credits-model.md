@@ -1,8 +1,8 @@
-# Credits Model
+# Credits model
 
-stripe402 uses a prepaid credits system instead of charging per request. This page explains why and how it works.
+stripe402 uses a prepaid credits system instead of charging per request.
 
-## Why Credits?
+## Why credits?
 
 Stripe imposes these constraints on charges:
 
@@ -11,7 +11,7 @@ Stripe imposes these constraints on charges:
 
 If an API call costs $0.01, charging per request would mean paying $0.30+ in fees on a $0.01 charge — a 3,000% overhead. And charges below $0.50 aren't even possible.
 
-## How It Works
+## How it works
 
 Instead of charging per request, stripe402 charges once for a block of credits:
 
@@ -24,7 +24,7 @@ Instead of charging per request, stripe402 charges once for a block of credits:
 
 On a $5.00 top-up, Stripe fees are ~$0.45 (2.9% + $0.30). That's 0.09¢ per request when amortized over 500 requests at $0.01 each — economically viable.
 
-## Default Configuration
+## Default configuration
 
 | Setting | Value | Description |
 |---------|-------|-------------|
@@ -33,7 +33,7 @@ On a $5.00 top-up, Stripe fees are ~$0.45 (2.9% + $0.30). That's 0.09¢ per requ
 
 The minimum top-up should always be at least 500 units ($0.50) to satisfy Stripe's minimum charge requirement.
 
-## Balance Storage
+## Balance storage
 
 Client balances are stored in the persistence layer (`Stripe402Store`):
 
@@ -45,7 +45,7 @@ All balance operations are **atomic** to prevent double-spending under concurren
 - **Redis**: Uses a Lua script that checks and deducts in a single operation
 - **PostgreSQL**: Uses `UPDATE ... WHERE balance >= amount RETURNING balance`
 
-## Top-Up Flow
+## Top-up flow
 
 When a client sends a `paymentMethodId` in the `payment` header:
 
@@ -61,7 +61,7 @@ When a client sends a `paymentMethodId` in the `payment` header:
 
 This means clients can safely send the same `paymentMethodId` on every request without being charged multiple times. The card is only charged when the balance is actually insufficient, making the protocol tolerant of simple clients that don't track `clientId` separately.
 
-## Deduction Flow
+## Deduction flow
 
 When a client has existing credits:
 
@@ -70,7 +70,7 @@ When a client has existing credits:
 3. If balance >= amount: deduction succeeds, remaining balance is returned
 4. If balance < amount: deduction fails (returns `null`), server sends 402 with `error: 'insufficient_credits'`
 
-## Transaction Logging
+## Transaction logging
 
 Both store implementations support optional transaction logging via `store.recordTransaction()`. Each transaction records:
 

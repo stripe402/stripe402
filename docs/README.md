@@ -2,7 +2,7 @@
 
 An HTTP 402 payment protocol for API monetization using Stripe. Inspired by [x402](https://x402.org), but built on traditional credit card rails instead of blockchain settlement.
 
-stripe402 enables machine-readable, automatic payment negotiation between clients and servers. No signup, no API keys, no OAuth — just an HTTP header. A client with a credit card can pay for any stripe402-enabled API on the first request.
+Clients and servers negotiate payment via HTTP headers. No signup, no API keys, no OAuth. A client with a credit card can pay for any stripe402-enabled API on the first request.
 
 ## What is stripe402?
 
@@ -10,14 +10,14 @@ stripe402 turns the HTTP 402 status code — reserved since 1997 but never stand
 
 Subsequent requests use a client ID (derived from the card fingerprint) to deduct from the credit balance — no payment until credits run out.
 
-## Key Features
+## Features
 
-- **Zero-signup API monetization** — no accounts, no API keys, no dashboards
-- **Credit card payments via Stripe** — the payment rail used by 99% of the internet
-- **Sub-cent pricing** — credits system enables micropayments (1 unit = 1/10,000 of a dollar)
-- **Agentic payments** — AI agents can discover and pay for APIs autonomously
-- **Multiple persistence backends** — Redis (fast) and PostgreSQL (durable) included
-- **Framework-agnostic core** — Express middleware included, easy to add others
+- No signup, no API keys, no dashboards — the payment is the authentication
+- Credit card payments via Stripe
+- Sub-cent pricing via a credits system (1 unit = 1/10,000 of a dollar)
+- AI agents can discover and pay for APIs without human setup
+- Redis and PostgreSQL persistence backends included
+- Express middleware included; framework-agnostic core makes it easy to add others
 
 ## Packages
 

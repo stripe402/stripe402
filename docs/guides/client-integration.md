@@ -106,7 +106,7 @@ If the user declines to pay (callback returns `null`):
 
 The `onPaymentRequired` callback must return a Stripe PaymentMethod ID (`pm_...`). **Clients do not need a Stripe account** — the 402 response includes the server's publishable key (`requirements.publishableKey`), which is all that's needed to tokenize a card.
 
-> For a comprehensive guide with all options, see [Creating Payment Methods](creating-payment-methods.md).
+> For all options, see [Creating Payment Methods](creating-payment-methods.md).
 
 ### Headless / Node.js Client
 

@@ -1,12 +1,8 @@
 # @stripe402/core
 
-The foundation package for the stripe402 protocol. Contains all TypeScript types, constants, header encoding/decoding, HMAC identity derivation, and error types.
+All TypeScript types, constants, header encoding/decoding, HMAC identity derivation, and error types for the stripe402 protocol.
 
-## Key Properties
-
-- **Zero external dependencies** — uses only Node.js built-in `crypto`
-- **Framework-agnostic** — pure TypeScript with no runtime dependencies
-- **Transitively installed** — pulled in automatically when you install any other stripe402 package
+No external dependencies (only Node.js built-in `crypto`). Framework-agnostic. Pulled in automatically when you install any other stripe402 package.
 
 ## Installation
 
