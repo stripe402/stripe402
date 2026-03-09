@@ -13,6 +13,9 @@
   "bugs": {
     "url": "https://github.com/whatl3y/stripe402/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["stripe", "402", "payment", "express", "middleware", "http", "api", "monetization"],
   "engines": {
     "node": ">=16.0.0"
