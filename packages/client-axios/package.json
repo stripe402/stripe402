@@ -1,14 +1,41 @@
 {
   "name": "@stripe402/client-axios",
   "version": "0.0.1",
+  "description": "Axios interceptor for automatic HTTP 402 payment handling with the stripe402 protocol",
   "license": "Apache-2.0",
   "author": "Lance Whatley",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whatl3y/stripe402.git",
+    "directory": "packages/client-axios"
+  },
+  "homepage": "https://github.com/whatl3y/stripe402/tree/main/packages/client-axios#readme",
+  "bugs": {
+    "url": "https://github.com/whatl3y/stripe402/issues"
+  },
+  "keywords": ["stripe", "402", "payment", "axios", "interceptor", "client", "http"],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "@stripe402/core": "workspace:*"

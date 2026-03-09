@@ -40,3 +40,15 @@ unitsToDollars(500)  // "0.05"
 ### Types
 
 Key types exported: `PaymentRequiredResponse`, `PaymentPayload`, `PaymentResponse`, `RouteConfig`, `Stripe402ServerConfig`, `Stripe402ClientConfig`, `Stripe402Store`, `ClientRecord`, `TransactionRecord`.
+
+## Requirements
+
+- Node.js >= 16.0.0
+
+## Part of the stripe402 monorepo
+
+See the [main repository](https://github.com/whatl3y/stripe402) for full documentation and the protocol specification.
+
+## License
+
+Apache-2.0 — see [LICENSE](./LICENSE) for details.

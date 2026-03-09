@@ -57,3 +57,19 @@ await store.createTables() // run once on startup
 ```
 
 Both stores implement the `Stripe402Store` interface from `@stripe402/core`.
+
+## Requirements
+
+- Node.js >= 16.0.0
+- **Required**: `stripe` (installed automatically)
+- **Optional peer dependencies** (install only what you need):
+  - `ioredis` >= 5.0.0 — for `RedisStore`
+  - `pg` >= 8.0.0 — for `PostgresStore`
+
+## Part of the stripe402 monorepo
+
+See the [main repository](https://github.com/whatl3y/stripe402) for full documentation and the protocol specification.
+
+## License
+
+Apache-2.0 — see [LICENSE](./LICENSE) for details.

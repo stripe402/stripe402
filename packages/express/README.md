@@ -39,3 +39,18 @@ app.get('/api/weather', (req, res) => {
 ```
 
 Routes not listed in the config pass through to the next middleware untouched.
+
+## Requirements
+
+- Node.js >= 16.0.0
+- **Peer dependency**: `express` >= 4.0.0
+
+You also need a store from `@stripe402/server` (Redis or PostgreSQL).
+
+## Part of the stripe402 monorepo
+
+See the [main repository](https://github.com/whatl3y/stripe402) for full documentation and the protocol specification.
+
+## License
+
+Apache-2.0 — see [LICENSE](./LICENSE) for details.

@@ -1,14 +1,41 @@
 {
   "name": "@stripe402/server",
   "version": "0.0.1",
+  "description": "Server-side Stripe integration and persistence stores for the stripe402 protocol",
   "license": "Apache-2.0",
   "author": "Lance Whatley",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whatl3y/stripe402.git",
+    "directory": "packages/server"
+  },
+  "homepage": "https://github.com/whatl3y/stripe402/tree/main/packages/server#readme",
+  "bugs": {
+    "url": "https://github.com/whatl3y/stripe402/issues"
+  },
+  "keywords": ["stripe", "402", "payment", "server", "redis", "postgres", "middleware"],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "@stripe402/core": "workspace:*",
