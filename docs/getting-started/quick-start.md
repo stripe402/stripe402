@@ -2,13 +2,25 @@
 
 Get a working stripe402 server running in 5 minutes.
 
+## Stripe Dashboard Setup
+
+Before running any example that creates PaymentMethods from card details (headless clients, the `create-pm` script, or AI agents), you must enable a Stripe dashboard setting:
+
+1. Go to [Stripe Dashboard → Settings → Integration](https://dashboard.stripe.com/settings/integration)
+2. Enable **"Publishable key card tokenization"**
+3. Save
+
+This is required because stripe402 supports programmatic, machine-to-machine payments where there is no browser UI. Card details are sent directly to Stripe's servers (never to the API server), so this is safe. See [Creating Payment Methods](../guides/creating-payment-methods.md#stripe-dashboard-requirement-publishable-key-tokenization) for a detailed explanation.
+
+> **Note**: Browser-based clients using Stripe.js Elements do not need this setting.
+
 ## Option 1: Docker Compose (Easiest)
 
 The example app includes a Docker Compose setup with Redis, PostgreSQL, and the example server:
 
 ```bash
 # Clone the repo
-git clone https://github.com/user/stripe402.git
+git clone https://github.com/stripe402/stripe402.git
 cd stripe402
 
 # Copy the example env file and add your Stripe test keys

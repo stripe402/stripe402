@@ -30,7 +30,7 @@ function ArrowRight({ size = 16 }: { size?: number }) {
 
 /* ─── Shared ─── */
 
-const GITHUB_URL = 'https://github.com/whatl3y/stripe402'
+const GITHUB_URL = 'https://github.com/stripe402/stripe402'
 const TWITTER_URL = 'https://x.com/stripe402'
 
 function SocialLinks({ className = '' }: { className?: string }) {

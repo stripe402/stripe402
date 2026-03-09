@@ -61,7 +61,7 @@ When the `payment` header contains a `clientId`:
 ### Path 4: New Payment (Card Charge)
 
 ```
-Client → GET /api/joke + payment header (paymentMethodId) → Charge card → Credit balance → Deduct → 200 OK
+Client → GET /api/joke + payment header (paymentMethodId) → Check existing credits → Charge card (if needed) → Credit balance → Deduct → 200 OK
 ```
 
 This is the full payment flow:
@@ -72,9 +72,11 @@ This is the full payment flow:
 
 3. **Derive client ID**: Calls `deriveClientId(fingerprint, serverSecret)` — HMAC-SHA256 of the fingerprint using the server secret.
 
-4. **Find or create Stripe customer**: Calls `StripeService.findOrCreateCustomer(clientId, paymentMethodId)`. Searches for existing customer by `metadata["stripe402_client_id"]`, creates one if not found.
+4. **Check existing credits**: Calls `store.deductBalance(clientId, amount)` to check if this client already has sufficient credits. If the deduction succeeds, the middleware skips charging entirely — it sets the `payment-response` header, records the deduction, and calls `next()`. This prevents double-charging when a client resends the same `paymentMethodId` on every request instead of switching to `clientId` after the first payment. The client's card is only charged when their balance is actually insufficient.
 
-5. **Charge the card**: Calls `StripeService.createAndConfirmPayment()` with:
+5. **Find or create Stripe customer**: Calls `StripeService.findOrCreateCustomer(clientId, paymentMethodId)`. Searches for existing customer by `metadata["stripe402_client_id"]`, creates one if not found.
+
+6. **Charge the card**: Calls `StripeService.createAndConfirmPayment()` with:
    - `amount`: `unitsToCents(topUpAmount)` — converts units to Stripe cents (rounds up)
    - `currency`: from route config (default `'usd'`)
    - `paymentMethodId`: from the client's payment header
@@ -82,19 +84,19 @@ This is the full payment flow:
    - `description`: `"stripe402 top-up for {routeDescription or path}"`
    - `confirm: true` and `automatic_payment_methods.allow_redirects: 'never'`
 
-6. **Verify payment**: If `paymentIntent.status !== 'succeeded'`, returns error `payment_failed`.
+7. **Verify payment**: If `paymentIntent.status !== 'succeeded'`, returns error `payment_failed`.
 
-7. **Create client record**: If no existing client record, creates one with `balance: 0`.
+8. **Create client record**: If no existing client record, creates one with `balance: 0`.
 
-8. **Credit balance**: Calls `store.addBalance(clientId, topUpAmount)`.
+9. **Credit balance**: Calls `store.addBalance(clientId, topUpAmount)`.
 
-9. **Record top-up transaction**: If `store.recordTransaction` exists, records a `topup` transaction.
+10. **Record top-up transaction**: If `store.recordTransaction` exists, records a `topup` transaction.
 
-10. **Deduct for current request**: Calls `store.deductBalance(clientId, routeConfig.amount)`.
+11. **Deduct for current request**: Calls `store.deductBalance(clientId, routeConfig.amount)`.
 
-11. **Record deduction transaction**: If `store.recordTransaction` exists, records a `deduction` transaction.
+12. **Record deduction transaction**: If `store.recordTransaction` exists, records a `deduction` transaction.
 
-12. **Respond**: Sets `payment-response` header with `success: true`, `chargeId` (PaymentIntent ID), `creditsRemaining`, and `clientId`. Calls `next()` to serve the resource.
+13. **Respond**: Sets `payment-response` header with `success: true`, `chargeId` (PaymentIntent ID), `creditsRemaining`, and `clientId`. Calls `next()` to serve the resource.
 
 ## Error Handling
 

@@ -94,7 +94,7 @@ const jsonLd = {
   name: 'stripe402',
   description: DESCRIPTION,
   url: SITE_URL,
-  codeRepository: 'https://github.com/whatl3y/stripe402',
+  codeRepository: 'https://github.com/stripe402/stripe402',
   programmingLanguage: 'TypeScript',
   license: 'https://www.apache.org/licenses/LICENSE-2.0',
   applicationCategory: 'DeveloperApplication',

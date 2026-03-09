@@ -128,6 +128,29 @@ export function stripe402Middleware(config: Stripe402ServerConfig) {
       )
       const clientId = deriveClientId(fingerprint, config.serverSecret)
 
+      // Check if this client already has sufficient credits — skip charging if so
+      const existingBalance = await config.store.deductBalance(clientId, routeConfig.amount)
+      if (existingBalance !== null) {
+        setPaymentResponseHeader(res, {
+          success: true,
+          creditsRemaining: existingBalance,
+          clientId,
+        })
+
+        if (config.store.recordTransaction) {
+          await config.store.recordTransaction({
+            id: randomUUID(),
+            clientId,
+            type: 'deduction',
+            amount: routeConfig.amount,
+            resource: routeKey,
+            createdAt: new Date(),
+          })
+        }
+
+        return next()
+      }
+
       // Find or create Stripe customer
       const customer = await stripeService.findOrCreateCustomer(
         clientId,

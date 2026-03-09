@@ -7,6 +7,19 @@ A complete walkthrough for setting up a stripe402 server with Express.
 - Node.js 22+
 - A Stripe account with test API keys
 - Redis running locally (or Docker)
+- **Publishable key tokenization enabled** in your Stripe dashboard (required for headless clients)
+
+### Enable Publishable Key Tokenization
+
+If your API will serve headless clients (AI agents, CLI tools, server-to-server), you must enable direct card tokenization in your Stripe dashboard:
+
+1. Go to [Stripe Dashboard → Settings → Integration](https://dashboard.stripe.com/settings/integration)
+2. Enable **"Publishable key card tokenization"**
+3. Save
+
+Stripe shows a warning that this is discouraged for typical web apps — this is expected. stripe402 requires it because programmatic clients cannot interact with Stripe's prebuilt UI elements (Elements, Checkout). This is safe because card details are sent directly to Stripe's servers and the API server only ever sees tokenized `pm_...` IDs. See the [Creating Payment Methods guide](creating-payment-methods.md#stripe-dashboard-requirement-publishable-key-tokenization) for full details.
+
+> **Note**: If your API only serves browser-based clients using Stripe.js Elements, this setting is not required.
 
 ## Step 1: Install Dependencies
 
@@ -162,4 +175,4 @@ curl -i http://localhost:3000/api/joke
 
 ## Complete Example
 
-See the full working example in [apps/example/src/server.ts](https://github.com/user/stripe402/blob/main/apps/example/src/server.ts).
+See the full working example in [apps/example/src/server.ts](https://github.com/stripe402/stripe402/blob/main/apps/example/src/server.ts).

@@ -20,7 +20,7 @@ With these conditions:
 
 ## Full License
 
-See the [LICENSE](https://github.com/user/stripe402/blob/main/LICENSE) file in the repository root.
+See the [LICENSE](https://github.com/stripe402/stripe402/blob/main/LICENSE) file in the repository root.
 
 ## Copyright
 

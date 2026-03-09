@@ -18,6 +18,36 @@ The publishable key is available inside the `onPaymentRequired` callback as `req
 
 ---
 
+## Stripe Dashboard Requirement: Publishable Key Tokenization
+
+Before clients can create PaymentMethods using raw card details (Methods 1, 3, and the `create-pm` script), the **server operator** must enable a Stripe dashboard setting:
+
+1. Go to [Stripe Dashboard → Settings → Integration](https://dashboard.stripe.com/settings/integration)
+2. Find **"Publishable key card tokenization"** (under "Advanced card tokenization controls" or similar)
+3. Enable the toggle to allow creating PaymentMethods with a publishable key without Stripe's prebuilt UI elements
+4. Save the setting
+
+Without this, direct card tokenization via the API will fail with:
+
+```
+This integration surface is unsupported for publishable key tokenization.
+```
+
+### Why stripe402 requires this
+
+Stripe disables this by default because most web apps should use Stripe Elements or Checkout for card collection, which provides PCI-compliant UI components. However, stripe402 is designed for **programmatic, machine-to-machine payments** — there is no browser UI for an AI agent or CLI tool to interact with.
+
+### Why this is safe
+
+- **Card details go directly to Stripe's servers** — the API server never sees raw card numbers. The publishable key creates a tokenized `pm_...` reference, and only that token is sent to the API server.
+- **Publishable keys are designed to be public** — they can only create tokens, not charge cards or read account data.
+- **The setting only affects tokenization on the server operator's own Stripe account** — each server operator controls their own toggle.
+- **Browser clients using Stripe.js Elements are unaffected** — this setting is only needed for headless/API-based tokenization (Method 2 below works without it).
+
+> **Note for server operators**: This setting applies to your Stripe account. You only need to enable it once, and it covers all stripe402 clients that use your publishable key for headless tokenization.
+
+---
+
 ## Method 1: Headless / Node.js Client (Card Details in Code)
 
 For AI agents, server-to-server, or any headless client. Use the Stripe SDK with the **publishable key** from the 402 response and your card details:
@@ -264,7 +294,16 @@ The critical design point: **clients never need a Stripe account**. The server's
 
 Once created, a PaymentMethod ID (`pm_...`) is:
 
-- **Reusable**: The same ID can be used for multiple stripe402 top-ups on the same server
+- **Reusable**: The same ID can be sent on every request — the server only charges when the balance is insufficient
 - **Persistent**: Valid until the underlying card expires
 - **Server-scoped**: Tied to the server's Stripe account (the publishable key used to create it)
 - **Not a card number**: A tokenized reference — safe to store, transmit, and log
+
+### Safe to Reuse on Every Request
+
+Clients can send the same `paymentMethodId` on every request without worrying about being charged multiple times. The server derives a `clientId` from the card's fingerprint and checks for existing credits before charging:
+
+- **Credits sufficient**: deducts from balance, no charge created
+- **Credits insufficient**: charges the card for a new top-up, then deducts
+
+This means simple clients (like shell scripts using `curl`) can use the same `payment` header repeatedly. The card is only charged when the balance actually runs out. For optimal performance, clients should switch to sending just the `clientId` (from the `payment-response` header) after the first request, which avoids the Stripe API call to look up the card fingerprint on every request.

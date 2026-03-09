@@ -295,7 +295,9 @@ describe('stripe402Middleware', () => {
       })
       store.getClient.mockResolvedValue(null) // new client
       store.addBalance.mockResolvedValue(50_000)
-      store.deductBalance.mockResolvedValue(49_900)
+      store.deductBalance
+        .mockResolvedValueOnce(null) // first call: no existing balance, skip early deduct
+        .mockResolvedValueOnce(49_900) // second call: after top-up, deduct succeeds
 
       await middleware(req, res, next)
 
@@ -341,7 +343,9 @@ describe('stripe402Middleware', () => {
       })
       store.getClient.mockResolvedValue({ clientId: 'existing' }) // already exists
       store.addBalance.mockResolvedValue(100_000)
-      store.deductBalance.mockResolvedValue(99_900)
+      store.deductBalance
+        .mockResolvedValueOnce(null) // first call: no existing balance (or insufficient)
+        .mockResolvedValueOnce(99_900) // second call: after top-up
 
       await middleware(req, res, next)
 
@@ -369,7 +373,9 @@ describe('stripe402Middleware', () => {
       })
       store.getClient.mockResolvedValue(null)
       store.addBalance.mockResolvedValue(50_000)
-      store.deductBalance.mockResolvedValue(49_900)
+      store.deductBalance
+        .mockResolvedValueOnce(null) // first call: no existing balance
+        .mockResolvedValueOnce(49_900) // second call: after top-up
 
       await middleware(req, res, next)
 
@@ -396,6 +402,7 @@ describe('stripe402Middleware', () => {
         id: 'pi_pending',
         status: 'requires_action', // 3D Secure, etc.
       })
+      store.deductBalance.mockResolvedValueOnce(null) // no existing balance
 
       await middleware(req, res, next)
 
@@ -492,7 +499,9 @@ describe('stripe402Middleware', () => {
       })
       store.getClient.mockResolvedValue(null)
       store.addBalance.mockResolvedValue(50_000)
-      store.deductBalance.mockResolvedValue(49_900)
+      store.deductBalance
+        .mockResolvedValueOnce(null) // first call: no existing balance
+        .mockResolvedValueOnce(49_900) // second call: after top-up
 
       await middleware(req, res, next)
 
@@ -522,8 +531,9 @@ describe('stripe402Middleware', () => {
       const next = vi.fn()
 
       store.deductBalance
-        .mockResolvedValueOnce(null) // first deduction fails (insufficient)
-        .mockResolvedValueOnce(49_900) // second deduction after top-up
+        .mockResolvedValueOnce(null) // first: clientId deduction fails (insufficient)
+        .mockResolvedValueOnce(null) // second: early fingerprint-based check also fails
+        .mockResolvedValueOnce(49_900) // third: deduction after top-up succeeds
       mockGetCardFingerprint.mockResolvedValue('fp_card')
       mockFindOrCreateCustomer.mockResolvedValue({ id: 'cus_test' })
       mockCreateAndConfirmPayment.mockResolvedValue({
@@ -537,6 +547,39 @@ describe('stripe402Middleware', () => {
 
       expect(next).toHaveBeenCalled()
       expect(mockCreateAndConfirmPayment).toHaveBeenCalled()
+    })
+  })
+
+  describe('skip charge when existing balance is sufficient', () => {
+    it('should deduct from existing balance without charging when paymentMethodId is sent but credits exist', async () => {
+      const payload: PaymentPayload = {
+        stripe402Version: 1,
+        paymentMethodId: 'pm_test',
+        topUpAmount: 50_000,
+      }
+      const req = createMockReq('GET', '/api/joke', {
+        [HEADERS.PAYMENT]: encodeHeader(payload),
+      })
+      const res = createMockRes()
+      const next = vi.fn()
+
+      mockGetCardFingerprint.mockResolvedValue('fp_card_existing')
+      // Early deduct succeeds — client already has credits
+      store.deductBalance.mockResolvedValueOnce(49_900)
+
+      await middleware(req, res, next)
+
+      // Should serve the resource without charging
+      expect(next).toHaveBeenCalled()
+      expect(mockFindOrCreateCustomer).not.toHaveBeenCalled()
+      expect(mockCreateAndConfirmPayment).not.toHaveBeenCalled()
+
+      // Verify response
+      const responseHeader = res._headers[HEADERS.PAYMENT_RESPONSE]
+      const paymentResponse = decodeHeader<PaymentResponse>(responseHeader)
+      expect(paymentResponse.success).toBe(true)
+      expect(paymentResponse.creditsRemaining).toBe(49_900)
+      expect(paymentResponse.chargeId).toBeUndefined()
     })
   })
 

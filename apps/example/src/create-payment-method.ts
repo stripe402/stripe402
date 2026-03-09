@@ -71,6 +71,16 @@ async function main() {
     console.log(`In a real stripe402 flow, clients get this key automatically from the 402 response.`)
   } catch (err: any) {
     console.error(`Failed to create PaymentMethod: ${err.message}`)
+    if (err.message?.includes('unsupported for publishable key tokenization')) {
+      console.error('')
+      console.error('You need to enable "Publishable key card tokenization" in your Stripe dashboard:')
+      console.error('  1. Go to https://dashboard.stripe.com/settings/integration')
+      console.error('  2. Enable "Publishable key card tokenization"')
+      console.error('  3. Save and retry this command')
+      console.error('')
+      console.error('This is required for headless/programmatic card tokenization (AI agents, CLI tools).')
+      console.error('Card details are sent directly to Stripe, never to the API server, so this is safe.')
+    }
     process.exit(1)
   }
 }

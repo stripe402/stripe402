@@ -8,6 +8,7 @@ A working example server with two paid endpoints and client demo scripts.
 - pnpm
 - Redis running locally (or via Docker)
 - A [Stripe test account](https://dashboard.stripe.com/test/apikeys) (for the **server** only)
+- **Publishable key tokenization enabled** in your Stripe dashboard (see below)
 
 ## Setup
 
@@ -42,7 +43,17 @@ STRIPE_PUBLISHABLE_KEY=pk_test_...   # Included in 402 responses for clients
 SERVER_SECRET=any-random-string      # Used for HMAC client identity
 ```
 
-### 4. Create a test PaymentMethod
+### 4. Enable Publishable Key Tokenization
+
+The `create-pm` script and headless clients create PaymentMethods using raw card details via Stripe's API. Stripe disables this by default, so you must enable it:
+
+1. Go to [Stripe Dashboard → Settings → Integration](https://dashboard.stripe.com/settings/integration)
+2. Enable **"Publishable key card tokenization"**
+3. Save
+
+Stripe shows a warning that this is discouraged for typical web apps. This is safe for stripe402 because card details are sent directly to Stripe (never to the API server), and the setting is required for programmatic/headless payment flows like AI agents and CLI tools. See the [Creating Payment Methods guide](../../docs/guides/creating-payment-methods.md#stripe-dashboard-requirement-publishable-key-tokenization) for full details.
+
+### 5. Create a test PaymentMethod
 
 This simulates what a real client does — tokenize a card using the server's publishable key:
 

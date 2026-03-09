@@ -47,14 +47,19 @@ All balance operations are **atomic** to prevent double-spending under concurren
 
 ## Top-Up Flow
 
-When a client needs to add credits:
+When a client sends a `paymentMethodId` in the `payment` header:
 
-1. Client sends `paymentMethodId` and `topUpAmount` in the `payment` header
-2. Server validates `topUpAmount >= minTopUp`
-3. Server charges the card via Stripe (`PaymentIntent.create` with `confirm: true`)
-4. Server calls `store.addBalance(clientId, topUpAmount)` to credit the balance
-5. Server deducts the cost of the current request from the new balance
-6. Server returns `creditsRemaining` in the `payment-response` header
+1. Server derives the `clientId` from the card's fingerprint (HMAC-SHA256)
+2. Server checks if that `clientId` already has sufficient credits
+3. **If credits are sufficient**: deducts the request cost and serves the resource — **no charge is created**
+4. **If credits are insufficient** (or client has no balance):
+   a. Server validates `topUpAmount >= minTopUp`
+   b. Server charges the card via Stripe (`PaymentIntent.create` with `confirm: true`)
+   c. Server calls `store.addBalance(clientId, topUpAmount)` to credit the balance
+   d. Server deducts the cost of the current request from the new balance
+   e. Server returns `creditsRemaining` in the `payment-response` header
+
+This means clients can safely send the same `paymentMethodId` on every request without being charged multiple times. The card is only charged when the balance is actually insufficient, making the protocol tolerant of simple clients that don't track `clientId` separately.
 
 ## Deduction Flow
 
